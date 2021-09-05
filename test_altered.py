@@ -12,7 +12,7 @@ H = 10000
 g = 10
 f = 0.0001
 theta0 = 300
-dt= 5000
+
 s = -0.000003
 a = g*s/(f*theta0)
 N = 0.000025
@@ -70,7 +70,7 @@ def G(K):
     Q = sum(H*Indicator,axis=-1)
     return(Q)
 # compute a*dt*sum_j(t_ij*(x_j-X_i))
-def R(S,T):
+def R(S,T,dt):
     W = np.zeros(n1)
     for i in range(n1):
         Q1 = x-S[i]
@@ -120,7 +120,7 @@ def TEST(dt,Time,X,Z,x,z):
     # update the X,Z 
    
         
-        Z=Z+R(X,T)
+        Z=Z+R(X,T,dt)
         X=X-a*dt*(T@z*n1-H/2) 
         X= mod(X+L,2*L)-L
     # +/-
@@ -131,26 +131,27 @@ def TEST(dt,Time,X,Z,x,z):
 
  
 
-    return dts, E-E[0]
+    return dts, Kin
 
 
-dts2, E2 = TEST(2500,800,X,Z,x,z)
+
 # print(dts2.shape, E2.shape)
 
-dts3, E3 = TEST(5000,400,X,Z,x,z)
+dts3, E3 = TEST(2500,800,X,Z,x,z)
 # print(dts3.shape, E3.shape)
 
-dts4, E4 = TEST(1000,2000,X,Z,x,z)
+dts4, E4 = TEST(5000,400,X,Z,x,z)
 # print(dts4.shape, E4.shape)
 
 
 
 plt.figure()
-plt.plot(dts3, E3, '-', label = 'Energy, dt=1000')
-plt.plot(dts2, E2, '-', label = 'Energy, dt=2500')
-plt.plot(dts4, E4, '-', label = 'Energy, dt=5000')
+
+plt.plot(dts3, E3, '-', label = 'Kinetic Energy, dt=2500')
+plt.plot(dts4, E4, '-', label = 'Kinetic Energy, dt=5000')
 # plt.xlim(0,1000*500/(24*60*60))
 # plt.legend(['Energy, dt=1000', 'Energy, dt=5000', 'Energy, dt=10000'], loc='upper right')
+plt.xlabel('Time/s')
 plt.legend(loc='upper right')
-plt.savefig('test_run.png')
+
 plt.show()
